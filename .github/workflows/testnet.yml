@@ -2,9 +2,9 @@ name: Testnet Test
 
 on:
   schedule:
-    # At 18:40 on every 4th day-of-week
+    # At 00:00 on day-of-month 6, 12, 18, 24, and 30.
     # https://crontab.guru
-    - cron: "40 18 * * */4"
+    - cron: "0 0 6,12,18,24,30 * *"
 
 jobs:
   build:
