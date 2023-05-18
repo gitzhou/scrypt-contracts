@@ -43,11 +43,11 @@ export class Pyramid extends SmartContract {
         this.schemer = hash160(bobPubKey)
         const bobOutput = this.buildStateOutput(Pyramid.DUST)
 
-        let outputs: ByteString = commissionOutput + aliceOutput + bobOutput
-        if (this.changeAmount > 0) {
-            outputs += this.buildChangeOutput()
-        }
-
+        const outputs: ByteString =
+            commissionOutput +
+            aliceOutput +
+            bobOutput +
+            this.buildChangeOutput()
         assert(
             hash256(outputs) == this.ctx.hashOutputs,
             'hash outputs mismatch'
