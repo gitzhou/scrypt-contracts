@@ -18,12 +18,7 @@ describe('Test SmartContract `Pyramid`', () => {
         await pyramid.connect(getDummySigner())
 
         const [, alicePubKey, ,] = randomPrivateKey()
-        const aliceInstance = pyramid.next()
-        aliceInstance.schemer = PubKeyHash(toHex(alicePubKey))
-
         const [, bobPubKey, ,] = randomPrivateKey()
-        const bobInstance = pyramid.next()
-        bobInstance.schemer = PubKeyHash(toHex(bobPubKey))
 
         const { tx: callTx, atInputIndex } = await pyramid.methods.recruit(
             PubKey(toHex(alicePubKey)),
