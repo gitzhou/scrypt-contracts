@@ -1,5 +1,8 @@
 # scrypt-contracts
 
+[![Local Test](https://github.com/gitzhou/scrypt-contracts/actions/workflows/local.yml/badge.svg)](https://github.com/gitzhou/scrypt-contracts/actions/workflows/local.yml)
+[![Testnet Test](https://github.com/gitzhou/scrypt-contracts/actions/workflows/testnet.yml/badge.svg)](https://github.com/gitzhou/scrypt-contracts/actions/workflows/testnet.yml)
+
 ## Build
 
 ```sh
