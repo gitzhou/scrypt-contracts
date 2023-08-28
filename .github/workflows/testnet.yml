@@ -1,0 +1,23 @@
+name: Testnet Test
+
+on:
+  schedule:
+    # At 00:00 on day-of-month 7, 17, and 27.
+    # https://crontab.guru
+    - cron: "0 0 7,17,27 * *"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Install dependencies
+        run: npm i
+      - name: Update env
+        run: echo "PRIVATE_KEY="${{ secrets.PRIVATE_KEY }}"" > .env
+      - name: Run testnet test
+        run: npm run testnet
