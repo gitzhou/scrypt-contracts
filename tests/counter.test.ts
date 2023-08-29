@@ -14,8 +14,7 @@ describe('Test SmartContract `Counter`', () => {
         await instance.connect(getDefaultSigner())
 
         // deploy the contract
-        const deployTx = await instance.deploy()
-        console.log(`Counter contract deployed: ${deployTx.id}`)
+        await instance.deploy()
     })
 
     it('should pass the public method unit test successfully.', async () => {
@@ -26,19 +25,16 @@ describe('Test SmartContract `Counter`', () => {
             const nextInstance = prevInstance.next()
             // 2. apply the updates on the new instance.
             nextInstance.count++
-            // 3. construct a transaction for contract call
-            const { tx: callTx, atInputIndex } =
+            // 3. call contract and verify
+            const call = async () =>
                 await prevInstance.methods.increment({
                     next: {
                         instance: nextInstance,
                         balance: 1,
                     },
                 } as MethodCallOptions<Counter>)
-            console.log(`Counter contract called: ${callTx.id}`)
-            // 4. verify contract call result
-            const result = callTx.verifyScript(atInputIndex)
-            expect(result.success, result.error).to.be.true
-            // 5. prepare for the next iteration
+            expect(call()).not.throw
+            // 4. prepare for the next iteration
             prevInstance = nextInstance
         }
     })

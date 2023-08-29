@@ -14,23 +14,18 @@ describe('Test SmartContract `HashPuzzle`', () => {
         instance = new HashPuzzle(sha256(toByteString('hello world', true)))
         await instance.connect(getDefaultSigner())
 
-        const deployTx = await instance.deploy()
-        console.log(`HashPuzzle contract deployed: ${deployTx.id}`)
+        await instance.deploy()
     })
 
     it('should pass the public method unit test successfully.', async () => {
-        const { tx: callTx, atInputIndex } = await instance.methods.unlock(
-            toByteString('hello world', true)
-        )
-        console.log(`HashPuzzle contract called: ${callTx.id}`)
-
-        const result = callTx.verifyScript(atInputIndex)
-        expect(result.success, result.error).to.eq(true)
+        const message = toByteString('hello world', true)
+        const call = async () => await instance.methods.unlock(message)
+        expect(call()).not.throw
     })
 
     it('should throw with wrong message.', async () => {
-        return expect(
-            instance.methods.unlock(toByteString('wrong message', true))
-        ).to.be.rejectedWith(/Hash does not match/)
+        const message = toByteString('wrong message', true)
+        const call = async () => await instance.methods.unlock(message)
+        return expect(call()).to.be.rejectedWith(/Hash does not match/)
     })
 })

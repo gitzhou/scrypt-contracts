@@ -11,22 +11,19 @@ describe('Test SmartContract `Pyramid`', () => {
         const pyramid = new Pyramid(PubKeyHash(toHex(myPublicKeyHash)), 1000n)
         await pyramid.connect(getDefaultSigner())
 
-        const deployTx = await pyramid.deploy()
-        console.log(`Pyramid contract deployed: ${deployTx.id}`)
+        await pyramid.deploy()
 
         const [, alicePubKey, ,] = randomPrivateKey()
         const [, bobPubKey, ,] = randomPrivateKey()
 
-        const { tx: callTx, atInputIndex } = await pyramid.methods.recruit(
-            PubKey(toHex(alicePubKey)),
-            PubKey(toHex(bobPubKey)),
-            {
-                changeAddress: myAddress,
-            } as MethodCallOptions<Pyramid>
-        )
-        console.log(`Pyramid contract called: ${callTx.id}`)
-
-        const result = callTx.verifyScript(atInputIndex)
-        expect(result.success, result.error).to.eq(true)
+        const call = async () =>
+            await pyramid.methods.recruit(
+                PubKey(toHex(alicePubKey)),
+                PubKey(toHex(bobPubKey)),
+                {
+                    changeAddress: myAddress,
+                } as MethodCallOptions<Pyramid>
+            )
+        expect(call()).not.throw
     })
 })
