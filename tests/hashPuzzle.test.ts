@@ -19,13 +19,13 @@ describe('Test SmartContract `HashPuzzle`', () => {
 
     it('should pass the public method unit test successfully.', async () => {
         const message = toByteString('hello world', true)
-        const call = async () => await instance.methods.unlock(message)
-        expect(call()).not.throw
+        const call = () => instance.methods.unlock(message)
+        await expect(call()).not.to.be.rejected
     })
 
     it('should throw with wrong message.', async () => {
         const message = toByteString('wrong message', true)
-        const call = async () => await instance.methods.unlock(message)
-        return expect(call()).to.be.rejectedWith(/Hash does not match/)
+        const call = () => instance.methods.unlock(message)
+        await expect(call()).to.be.rejectedWith(/Hash does not match/)
     })
 })

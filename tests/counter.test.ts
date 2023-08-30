@@ -26,14 +26,14 @@ describe('Test SmartContract `Counter`', () => {
             // 2. apply the updates on the new instance.
             nextInstance.count++
             // 3. call contract and verify
-            const call = async () =>
-                await prevInstance.methods.increment({
+            const call = () =>
+                prevInstance.methods.increment({
                     next: {
                         instance: nextInstance,
                         balance: 1,
                     },
                 } as MethodCallOptions<Counter>)
-            expect(call()).not.throw
+            await expect(call()).not.to.be.rejected
             // 4. prepare for the next iteration
             prevInstance = nextInstance
         }

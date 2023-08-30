@@ -16,14 +16,14 @@ describe('Test SmartContract `Pyramid`', () => {
         const [, alicePubKey, ,] = randomPrivateKey()
         const [, bobPubKey, ,] = randomPrivateKey()
 
-        const call = async () =>
-            await pyramid.methods.recruit(
+        const call = () =>
+            pyramid.methods.recruit(
                 PubKey(toHex(alicePubKey)),
                 PubKey(toHex(bobPubKey)),
                 {
                     changeAddress: myAddress,
                 } as MethodCallOptions<Pyramid>
             )
-        expect(call()).not.throw
+        await expect(call()).not.to.be.rejected
     })
 })
