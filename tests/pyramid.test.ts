@@ -2,7 +2,9 @@ import { MethodCallOptions, PubKey, PubKeyHash, toHex } from 'scrypt-ts'
 import { Pyramid } from '../src/contracts/pyramid'
 import { getDefaultSigner, randomPrivateKey } from './utils/txHelper'
 import { myPublicKeyHash, myAddress } from './utils/privateKey'
-import { expect } from 'chai'
+import { expect, use } from 'chai'
+import chaiAsPromised from 'chai-as-promised'
+use(chaiAsPromised)
 
 describe('Test SmartContract `Pyramid`', () => {
     it('should pass the public method unit test successfully.', async () => {
