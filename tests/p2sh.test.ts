@@ -23,7 +23,7 @@ describe('Test SmartContract `P2SH`', () => {
     })
 
     it('should pass the public method unit test successfully.', async () => {
-        const call = () => instance.methods.redeem(redeemScript)
+        const call = async () => instance.methods.redeem(redeemScript)
         await expect(call()).not.to.be.rejected
     })
 })

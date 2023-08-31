@@ -16,7 +16,7 @@ describe('Test SmartContract `Pyramid`', () => {
         const [, alicePubKey, ,] = randomPrivateKey()
         const [, bobPubKey, ,] = randomPrivateKey()
 
-        const call = () =>
+        const call = async () =>
             pyramid.methods.recruit(
                 PubKey(toHex(alicePubKey)),
                 PubKey(toHex(bobPubKey)),
