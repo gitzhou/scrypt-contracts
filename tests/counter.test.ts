@@ -29,7 +29,7 @@ describe('Test SmartContract `Counter`', () => {
             nextInstance.count++
             // 3. call contract and verify
             const call = async () =>
-                prevInstance.methods.increment({
+                await prevInstance.methods.increment({
                     next: {
                         instance: nextInstance,
                         balance: 1,
