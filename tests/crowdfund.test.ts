@@ -7,6 +7,7 @@ import {
     findSig,
     bsv,
     ContractId,
+    TxOutputRef,
 } from 'scrypt-ts'
 import { Crowdfund } from '../src/contracts/crowdfund'
 import { getDefaultSigner, randomPrivateKey } from './utils/txHelper'
@@ -41,6 +42,7 @@ if (process.env.NETWORK === 'testnet') {
             )
 
             const deployTx = await instance.deploy()
+            console.log('deploy', deployTx.id)
             contractId = {
                 txId: deployTx.id,
                 outputIndex: 0,
@@ -64,12 +66,13 @@ if (process.env.NETWORK === 'testnet') {
             const pubKey = PubKey(toHex(donator))
             const nextInstance = instance.next()
             nextInstance.applyOffchainUpdatesForDonate(pubKey, amount)
-            await instance.methods.donate(pubKey, amount, {
+            const { tx } = await instance.methods.donate(pubKey, amount, {
                 next: {
                     instance: nextInstance,
                     balance: instance.balance + Number(amount),
                 },
             } as MethodCallOptions<Crowdfund>)
+            console.log('donate', tx.id)
             return nextInstance
         }
 
@@ -79,7 +82,7 @@ if (process.env.NETWORK === 'testnet') {
             amount: bigint
         ) {
             const pubKey = PubKey(toHex(donator))
-            const { next } = await instance.methods.refund(
+            const { tx, next } = await instance.methods.refund(
                 pubKey,
                 amount,
                 (sigResps) => findSig(sigResps, donator),
@@ -87,17 +90,19 @@ if (process.env.NETWORK === 'testnet') {
                     pubKeyOrAddrToSign: donator,
                 } as MethodCallOptions<Crowdfund>
             )
+            console.log('refund', tx.id)
             return next!.instance
         }
 
         async function collect(instance: Crowdfund) {
-            await instance.methods.collect(
+            const { tx } = await instance.methods.collect(
                 (sigResps) => findSig(sigResps, myPublicKey),
                 {
                     lockTime: deadline,
                     pubKeyOrAddrToSign: myPublicKey,
                 } as MethodCallOptions<Crowdfund>
             )
+            console.log('collet', tx.id)
         }
 
         it('should pass', async () => {
@@ -106,9 +111,14 @@ if (process.env.NETWORK === 'testnet') {
             const instance = Crowdfund.fromTx(tx, contractId.outputIndex, {
                 donators: new HashedMap<PubKey, bigint>(),
             })
+            console.log('instance rebuilt')
 
             // replay to get latest instance
             const latestInstance = await replayToLatest(instance, contractId)
+            console.log(
+                'instance replayed to the latest',
+                (latestInstance!.from! as TxOutputRef).tx.id
+            )
 
             if (latestInstance) {
                 // the latest instance is ready to use here

@@ -6,7 +6,7 @@
   "package": "./package.json",
   "reporter": "spec",
   "slow": "75",
-  "timeout": "3000",
+  "timeout": "300000",
   "ui": "bdd",
   "watch-files": ["./tests/**/*.test.ts"]
 }

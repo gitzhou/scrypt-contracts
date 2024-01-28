@@ -43,14 +43,21 @@ export async function getCodeHash(outpoint: Outpoint): Promise<string> {
 export async function getSpentIn(
     outpoint: Outpoint
 ): Promise<SpentIn | undefined> {
-    const url = `https://test-api.bitails.io/tx/${outpoint.txId}/output/${outpoint.outputIndex}`
-    const data = await axios.get(url).then((r) => r.data)
-    return data.spent
-        ? {
-              tx: await getTransaction(data.spentIn.txid),
-              atInputIndex: data.spentIn.inputIndex,
-          }
-        : undefined
+    const url = `https://api.whatsonchain.com/v1/bsv/test/tx/${outpoint.txId}/${outpoint.outputIndex}/spent`
+    return axios
+        .get(url)
+        .then(async (r) => {
+            return {
+                tx: await getTransaction(r.data.txid),
+                atInputIndex: r.data.vin,
+            }
+        })
+        .catch((e) => {
+            if (e.response.status === 404) {
+                return undefined
+            }
+            throw new Error(e.message)
+        })
 }
 
 export async function getSpentChainItem(
